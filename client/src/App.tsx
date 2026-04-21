@@ -90,6 +90,7 @@ function App() {
   };
 
   const submitAnswer = async () => {
+    if (!userAnswer.trim()) return;
     try {
       const response = await fetch('http://localhost:3001/submit-answer', {
         method: 'POST',
@@ -104,13 +105,16 @@ function App() {
         setHeatmapData(prev => prev.map(d => 
           d.date.toDateString() === todayStr ? { ...d, count: Math.min(d.count + 1, 4) } : d
         ));
+        alert('Correct! Your study session has been logged.');
       } else {
-        alert('Try a more detailed answer!');
+        alert('Try a more detailed answer! (Min 3 characters)');
       }
-      setTestQuestion(null);
-      setUserAnswer('');
     } catch (error) {
       console.error(error);
+      alert('Failed to connect to the backend server. Is it running?');
+    } finally {
+      setTestQuestion(null);
+      setUserAnswer('');
     }
   };
 
