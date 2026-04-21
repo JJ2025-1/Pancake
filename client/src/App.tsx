@@ -95,7 +95,7 @@ function App() {
       const response = await fetch('http://localhost:3001/submit-answer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, answer: userAnswer }),
+        body: JSON.stringify({ topic, question: testQuestion, answer: userAnswer }),
       });
       const data = await response.json();
       

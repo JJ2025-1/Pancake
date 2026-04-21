@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "better-sqlite3": "^12.9.0",
     "compromise": "^14.15.0",
     "cors": "^2.8.6",
