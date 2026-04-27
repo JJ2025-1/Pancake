@@ -1,0 +1,41 @@
+.isometric-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+  padding: 100px 0;
+  overflow: visible;
+}
+
+.isometric-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 80px);
+  grid-template-rows: repeat(5, 80px);
+  transform: rotateX(60deg) rotateZ(45deg);
+  gap: 2px;
+  background: #89b44c; /* Grass color like Forest app */
+  border: 10px solid #5d822b;
+  box-shadow: 20px 20px 50px rgba(0,0,0,0.3);
+}
+
+.grid-cell {
+  width: 80px;
+  height: 80px;
+  background: #96c354;
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-cell:nth-child(even) {
+  background: #8db94e;
+}
+
+/* Compensate for isometric rotation for the pancake component */
+.grid-cell .pancake-container {
+  transform-origin: bottom center;
+  /* Reverse the grid rotation to make pancake stand up */
+  transform: rotateZ(-45deg) rotateX(-60deg) translateY(-20px);
+}

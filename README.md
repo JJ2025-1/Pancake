@@ -1,54 +1,32 @@
-# StudyHeat - Heatmap Study Buddy App
+# Pancake 🥞
 
-StudyHeat is a minimalist, GitHub-inspired study tracker designed to build long-term learning habits. It uses an addictive heatmap visualization and a streak system to keep you motivated, just like your favorite coding contributions.
+An isometric focus app where you grow pancakes while you focus.
 
-## 🚀 Features
+![Pancake Logo](client/src/assets/react.svg)
 
-- **GitHub-Style Heatmap**: Visualize your study consistency over the last 52 weeks.
-- **Lightweight AI Tester**: A built-in tester (powered by NLP) that generates challenge questions based on the topic you are learning.
-- **Streak System**: Track your consecutive days of learning with a "🔥 Streak" counter.
-- **Git-Inspired UI**: A clean, dark-themed dashboard that feels like home for developers.
-- **Privacy-First**: Local data persistence using SQLite.
+## Features
+- **Isometric Grid:** A beautiful 3D-perspective grass grid for your pancake collection.
+- **Pancake Growth:** Watch your Dorayaki pancake grow slowly as you stay focused.
+- **30-Minute Milestones:** Complete a 30-minute focus session to bake a permanent pancake.
+- **Persistent Progress:** Your pancake collection is saved to your local storage.
 
-## 🛠️ Tech Stack
+## How to use
+1. Enter your Chef Name to start.
+2. Click "Start Focus Session" to begin cooking a new pancake.
+3. Every second you stay on the page, the pancake grows.
+4. Reach 30 minutes to finish baking!
+5. If you stop early, the incomplete pancake will be discarded.
 
-- **Frontend**: React (TypeScript), Vite, Vanilla CSS.
-- **Backend**: Node.js, Express, SQLite.
-- **AI/NLP**: `compromise` (Lightweight Natural Language Processing).
+## Tech Stack
+- **Frontend:** React, TypeScript, Vite, CSS Isometric transforms
+- **Backend:** Node.js, Express (Legacy StudyHeat endpoints)
 
-## 🏃 Getting Started
-
-### Prerequisites
-- Node.js (v18+)
-- npm
-
-### Installation
-1. Clone the repository:
+## Setup
+1. Install dependencies:
    ```bash
-   git clone https://github.com/JJ2025-1/Pancake.git
-   ```
-2. Install dependencies:
-   ```bash
-   # Root
    npm install
-   # Client
-   cd client && npm install
-   # Server
-   cd server && npm install
    ```
-
-### Running the App
-1. Start the backend:
+2. Run development server:
    ```bash
-   cd server && npm run start
+   npm run dev
    ```
-2. Start the frontend:
-   ```bash
-   cd client && npm run dev
-   ```
-
-## 📸 Screenshots
-The app features a minimalist dashboard with a month-labeled contribution graph, a streak counter, and an interactive AI challenge box.
-
----
-Built with ❤️ for students who love the Git aesthetic.

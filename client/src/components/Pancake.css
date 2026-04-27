@@ -1,0 +1,43 @@
+.pancake-container {
+  position: relative;
+  width: 60px;
+  height: 40px;
+  transition: transform 0.5s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+.pancake-top, .pancake-bottom {
+  width: 60px;
+  height: 25px;
+  background: #d28c46; /* Golden brown */
+  border-radius: 50%;
+  border: 2px solid #a66a2e;
+  box-shadow: inset 0 -4px 6px rgba(0,0,0,0.2);
+}
+
+.pancake-filling {
+  width: 55px;
+  height: 8px;
+  background: #4b2c20; /* Dark bean paste */
+  margin: -10px 0;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.pancake-bottom {
+  margin-top: -5px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.ready {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.05) translateY(-10px); }
+}
