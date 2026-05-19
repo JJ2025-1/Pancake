@@ -1,12 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import IsometricGrid from './components/IsometricGrid';
+import MotivationalQuote from './components/MotivationalQuote';
+import StatsDisplay from './components/StatsDisplay';
+import StudyCompanion from './components/StudyCompanion';
 
 interface PancakeItem {
   id: string;
   size: number;
   isReady: boolean;
   position: { x: number; y: number };
+}
+
+interface SessionData {
+  date: string;
+  score: number;
 }
 
 const PANCAKE_READY_TIME = 30 * 60; // 30 minutes in seconds
@@ -18,14 +26,51 @@ function App() {
   const [isFocusing, setIsFocusing] = useState(false);
   const [timer, setTimer] = useState(0);
   const [currentPancakeId, setCurrentPancakeId] = useState<string | null>(null);
+  
+  // New State
+  const [focusTopic, setFocusTopic] = useState('');
+  const [streak, setStreak] = useState(0);
+  const [sessions, setSessions] = useState<SessionData[]>([]);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  const fetchUserData = useCallback(async () => {
+    try {
+      const response = await fetch('/api/user-data?username=default_user');
+      const data = await response.json();
+      setStreak(data.streak);
+      setSessions(data.sessions);
+    } catch (error) {
+      console.error("Failed to fetch user data", error);
+    }
+  }, []);
+
+  const completeSession = useCallback(async () => {
+    try {
+      await fetch('/api/complete-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: focusTopic })
+      });
+      setIsCompleted(true);
+      fetchUserData();
+      // Reset isCompleted after some time
+      setTimeout(() => setIsCompleted(false), 10000);
+    } catch (error) {
+      console.error("Failed to complete session", error);
+    }
+  }, [focusTopic, fetchUserData]);
 
   // Load saved pancakes from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('pancakes');
-    if (saved) {
-      setPancakes(JSON.parse(saved));
-    }
-  }, []);
+    const init = () => {
+      const saved = localStorage.getItem('pancakes');
+      if (saved) {
+        setPancakes(JSON.parse(saved));
+      }
+      fetchUserData();
+    };
+    init();
+  }, [fetchUserData]);
 
   // Save pancakes to localStorage whenever they change
   useEffect(() => {
@@ -47,7 +92,7 @@ function App() {
   }, [pancakes]);
 
   useEffect(() => {
-    let interval: any;
+    let interval: ReturnType<typeof setInterval>;
     if (isFocusing) {
       interval = setInterval(() => {
         setTimer(prev => {
@@ -64,11 +109,8 @@ function App() {
               return p;
             }));
 
-            // If it reached 30 mins, complete it and start a new one if still focusing?
-            // User said "every 30 mins the pancake it will ready like a new born"
             if (nextTime >= PANCAKE_READY_TIME) {
-              // Current one is ready. Reset timer to start a new one?
-              // Or just stop. Let's assume it keeps going for another 30 mins.
+              completeSession();
               setTimer(0);
               const nextCell = findEmptyCell();
               if (nextCell) {
@@ -90,9 +132,13 @@ function App() {
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isFocusing, currentPancakeId, findEmptyCell]);
+  }, [isFocusing, currentPancakeId, findEmptyCell, completeSession]);
 
   const startFocus = () => {
+    if (!focusTopic) {
+      alert("Please enter what you're studying first!");
+      return;
+    }
     const cell = findEmptyCell();
     if (!cell) {
       alert("No space for more pancakes!");
@@ -103,6 +149,7 @@ function App() {
     setPancakes(prev => [...prev, { id, size: 0, isReady: false, position: cell }]);
     setTimer(0);
     setIsFocusing(true);
+    setIsCompleted(false);
   };
 
   const stopFocus = () => {
@@ -164,24 +211,40 @@ function App() {
       </header>
 
       <main className="game-area">
-        <div className="stats-panel">
-          <div className="stat-card">
-            <h3>Pancakes Baked</h3>
-            <p className="stat-value">{pancakes.filter(p => p.isReady).length}</p>
+        <div className="side-panel">
+          <MotivationalQuote />
+          <div className="stats-panel">
+            <StatsDisplay streak={streak} sessions={sessions} />
+            
+            <div className="topic-input-container">
+              <label>Focus Topic</label>
+              <input 
+                type="text" 
+                placeholder="What are you studying?" 
+                className="topic-input"
+                value={focusTopic}
+                onChange={(e) => setFocusTopic(e.target.value)}
+                disabled={isFocusing}
+              />
+            </div>
+
+            <div className="timer-display">
+              <h2>{formatTime(isFocusing ? timer : 0)}</h2>
+              <p>{isFocusing ? `Cooking: ${focusTopic}` : "Ready to cook?"}</p>
+            </div>
+            
+            <button 
+              className={`btn-action ${isFocusing ? 'stop' : 'start'}`}
+              onClick={isFocusing ? stopFocus : startFocus}
+            >
+              {isFocusing ? "Stop Session" : "Start Focus Session"}
+            </button>
           </div>
-          <div className="timer-display">
-            <h2>{formatTime(isFocusing ? timer : 0)}</h2>
-            <p>{isFocusing ? "Cooking..." : "Ready to cook?"}</p>
-          </div>
-          <button 
-            className={`btn-action ${isFocusing ? 'stop' : 'start'}`}
-            onClick={isFocusing ? stopFocus : startFocus}
-          >
-            {isFocusing ? "Stop Session" : "Start Focus Session"}
-          </button>
         </div>
 
         <IsometricGrid items={pancakes} />
+        
+        <StudyCompanion isFocusing={isFocusing} isCompleted={isCompleted} topic={focusTopic} />
       </main>
 
       <footer className="app-footer">

@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node --loader ts-node/esm index.ts",
-    "dev": "nodemon --loader ts-node/esm index.ts",
+    "start": "tsx index.ts",
+    "dev": "tsx watch index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -20,9 +20,11 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "natural": "^8.1.1",
-    "sqlite3": "^6.0.1"
+    "sqlite3": "^6.0.1",
+    "tsx": "^4.22.3"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.6.0",
